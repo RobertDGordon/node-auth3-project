@@ -12,4 +12,12 @@ router.get('/', authorization, checkType('admin'), (req, res) => {
     .catch(err => res.send(err));
 });
 
+router.get('/list', authorization, checkType('admin'), (req, res) => {
+  Users.findBy(req.user.type)
+    .then(users => {
+      res.json(users);
+    })
+    .catch(err => res.send(err));
+});
+
 module.exports = router;
