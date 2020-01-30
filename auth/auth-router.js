@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Users = require('../users/users-model.js');
 
-const { jwtSecret } = require('../config/sercret.js')
+const { jwtSecret } = require('../config/secret.js');
 
 router.post('/register', (req, res) => {
   let user = req.body;
@@ -12,7 +12,9 @@ router.post('/register', (req, res) => {
 
   Users.add(user)
     .then(saved => {
-      res.status(201).json(saved);
+      const token = signToken(saved);
+      const payload = {...saved, token: token}
+      res.status(201).json(payload);
     })
     .catch(error => {
       res.status(500).json(error);
@@ -41,9 +43,9 @@ router.post('/login', (req, res) => {
 
 function signToken(user) {
   const payload = {
-    userId: user.id,
-    username: user.username,
-    house: user.house
+    id: user.id,
+    name: user.username,
+    type: user.type
   };
 
   const options = {

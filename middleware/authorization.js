@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const { jwtSecret } = require('../config/sercret.js');
+const { jwtSecret } = require('../config/secret.js');
 
 module.exports = (req, res, next) => {
     const token = req.headers.authorization;
@@ -10,7 +10,7 @@ module.exports = (req, res, next) => {
         if (err) {
           res.status(401).json({ errorMessage: err })
         } else {
-          req.user = decodedToken.user;
+          req.user = { type: decodedToken.type };
           next();
         }
       })
